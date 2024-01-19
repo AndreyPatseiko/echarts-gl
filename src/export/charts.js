@@ -7,6 +7,7 @@ export {install as SurfaceChart} from '../chart/surface/install';
 export {install as Map3DChart} from '../chart/map3D/install';
 
 export {install as ScatterGLChart} from '../chart/scatterGL/install';
+export {install as HeatmapGLChart} from '../chart/heatmapGL/install';
 export {install as GraphGLChart} from '../chart/graphGL/install';
 export {install as FlowGLChart} from '../chart/flowGL/install';
 export {install as LinesGLChart} from '../chart/linesGL/install';

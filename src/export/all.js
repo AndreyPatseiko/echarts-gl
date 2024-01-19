@@ -15,6 +15,7 @@ import '../chart/surface';
 import '../chart/map3D';
 
 import '../chart/scatterGL';
+import '../chart/heatmapGL';
 import '../chart/graphGL';
 import '../chart/flowGL';
 import '../chart/linesGL';

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>HeatmapGL - ECHARTS-GL</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- Fullscreen Landscape on iOS -->
+    <link rel="stylesheet" href="./common.css" />
+  </head>
+  <body>
+    <div id="main"></div>
+    <script src="../node_modules/echarts/dist/echarts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+    <script src="../dist/echarts-gl.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="js/commonUI.js"></script>
+    <script>
+      var chart = echarts.init(document.getElementById("main"));
+
+      chart.setOption({
+        tooltip: {},
+        backgroundColor: "#fff",
+        xAxis: { type: "category" },
+        yAxis: { type: "category" },
+        series: [
+          {
+            type: "heatmapGL",
+            data: [
+              [0, 0, 5],
+              [0, 1, 1],
+              [1, 0, 1],
+              [1, 1, 4],
+              [2, 0, 1],
+              [2, 1, 4],
+              [3, 0, 2],
+              [3, 1, 1],
+              // [3, 2, 2],
+              [4, 0, "-"],
+              [4, 1, ""],
+              [5, 0, 2],
+              [5, 1, 1],
+            ],
+          },
+        ],
+        dataZoom: [
+          {
+            type: "inside",
+            start: 0,
+            end: 100,
+          },
+          {
+            start: 0,
+            end: 100,
+            handleIcon:
+              "M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z",
+            handleSize: "80%",
+            handleStyle: {
+              color: "#fff",
+              shadowBlur: 3,
+              shadowColor: "rgba(0, 0, 0, 0.6)",
+              shadowOffsetX: 2,
+              shadowOffsetY: 2,
+            },
+          },
+        ],
+        visualMap: {
+          min: 0,
+          max: 10,
+          calculable: true,
+          orient: "vertical",
+          right: "2%",
+          top: "5%",
+        },
+      });
+    </script>
+    <script>
+      document.addEventListener("click", (e) => {
+        console.log("%cClick", "color: darkred", { x: e?.zrX, y: e?.zrY });
+      });
+    </script>
+  </body>
+</html>
