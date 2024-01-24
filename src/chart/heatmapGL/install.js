@@ -18,6 +18,9 @@ export function install(registers) {
             var data = seriesModel.getData();
 
             var progress;
+
+            console.log(coordSys.dimensions);
+
             if (coordSys) {
                 var dims = coordSys.dimensions.map(function (dim) {
                     return data.mapDimension(dim);

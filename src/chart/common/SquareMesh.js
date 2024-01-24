@@ -11,8 +11,6 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
             color: new graphicGL.Geometry.Attribute('color', 'float', 4, 'COLOR'),
             position: new graphicGL.Geometry.Attribute('position', 'float', 3, 'POSITION'),
             size: new graphicGL.Geometry.Attribute('size', 'float', 1),
-            prevPosition: new graphicGL.Geometry.Attribute('prevPosition', 'float', 3),
-            prevSize: new graphicGL.Geometry.Attribute('prevSize', 'float', 1)
         }
     });
     Object.assign(geometry, verticesSortMixin);
@@ -22,16 +20,6 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
         transparent: true,
         depthMask: false
     });
-    material.enableTexture('sprite');
-    material.define('both', 'VERTEX_COLOR');
-    material.define('both', 'VERTEX_SIZE');
-
-    var sdfTexture = new graphicGL.Texture2D({
-        image: document.createElement('canvas'),
-        flipY: false
-    });
-
-    material.set('sprite', sdfTexture);
 
     return {
         geometry: geometry,

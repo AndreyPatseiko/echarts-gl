@@ -62,8 +62,6 @@ SquareBuilder.prototype = {
         if (end == null) {
             end = data.count();
         }
-        this._startDataIndex = start;
-        this._endDataIndex = end - 1;
 
         if (!this._mesh) {
             var material = this._prevMesh && this._prevMesh.material;
@@ -84,105 +82,37 @@ SquareBuilder.prototype = {
         this.rootNode.remove(this._prevMesh);
         this.rootNode.add(this._mesh);
 
-        this._setPositionTextureToMesh(this._mesh, this._positionTexture);
-
-        /* Getting width and height one cell */
-        var coordSys = seriesModel.coordinateSystem;
-        var xAxis = coordSys.getAxis('x');
-        var yAxis = coordSys.getAxis('y');
-        var cellSize = [xAxis.getBandWidth(), yAxis.getBandWidth()];
-
-        var symbolInfo = this._getSymbolInfo(seriesModel, start, end, cellSize);
-        var dpr = api.getDevicePixelRatio();
-
-        // TODO image symbol
-        var itemStyle = seriesModel.getModel('itemStyle').getItemStyle();
-
-        var pointSizeScale = 1;
-        if (symbolInfo.maxSize > 2) {
-            pointSizeScale = this._updateSymbolSprite(seriesModel, itemStyle, symbolInfo, dpr);
-            material.enableTexture('sprite');
-        }
-        else {
-            material.disableTexture('sprite');
-        }
-
-        attributes.position.init(end - start);
+        attributes.position.init(3);
         var rgbaArr = [];
 
         material.set({
             color: [1, 1, 1, 1]
         });
-        material.define('VERTEX_SIZE');
         material.define('VERTEX_COLOR');
         attributes.size.init(end - start);
         attributes.color.init(end - start);
         this._originalOpacity = new Float32Array(end - start);
-
-        var points = data.getLayout('points');
-
+        // var points = data.getLayout('points');
+        var points = new Float32Array([100, 100, 200, 200, 100, 200]);
+        console.log(points);
         var positionArr = attributes.position.value;
 
-        var hasTransparentPoint = false;
-
-        for (var i = 0; i < end - start; i++) {
+        for (var i = 0; i < 3; i++) {
             var i3 = i * 3;
             var i2 = i * 2;
-            if (this.is2D) {
-                positionArr[i3] = points[i2];
-                positionArr[i3 + 1] = points[i2 + 1];
-                positionArr[i3 + 2] = Z_2D;
-            }
-            else {
-                positionArr[i3] = points[i3];
-                positionArr[i3 + 1] = points[i3 + 1];
-                positionArr[i3 + 2] = points[i3 + 2];
-            }
+            positionArr[i3] = points[i2];
+            positionArr[i3 + 1] = points[i2 + 1];
+            positionArr[i3 + 2] = Z_2D;
 
             var color = getItemVisualColor(data, i);
             var opacity = getItemVisualOpacity(data, i);
             graphicGL.parseColor(color, rgbaArr);
             rgbaArr[3] *= opacity;
             attributes.color.set(i, rgbaArr);
-            if (rgbaArr[3] < 0.99) {
-                hasTransparentPoint = true;
-            }
-            /* Apply symbol size by category cell size */
-            var symbolSize = cellSize;
-            symbolSize = (symbolSize instanceof Array
-                ? Math.max(symbolSize[0], symbolSize[1]) : symbolSize);
-
-            // NaN pointSize may have strange result.
-            if (isNaN(symbolSize)) {
-                symbolSize = 0;
-            }
-            // Scale point size because canvas has margin.
-            attributes.size.value[i] = symbolSize * pointSizeScale * this._sizeScale;
-
-            // Save the original opacity for recover from fadeIn.
-            this._originalOpacity[i] = rgbaArr[3];
-
         }
-
-        this._mesh.sizeScale = pointSizeScale;
 
         geometry.updateBoundingBox();
         geometry.dirty();
-
-        // Update material.
-        this._updateMaterial(seriesModel, itemStyle);
-
-        var coordSys = seriesModel.coordinateSystem;
-        if (coordSys && coordSys.viewGL) {
-            var methodName = coordSys.viewGL.isLinearSpace() ? 'define' : 'undefine';
-            material[methodName]('fragment', 'SRGB_DECODE');
-        }
-
-        this._updateLabelBuilder(seriesModel, start, end);
-
-        this._updateHandler(seriesModel, ecModel, api);
-
-        this._updateAnimation(seriesModel);
 
         this._api = api;
     },
@@ -205,47 +135,6 @@ SquareBuilder.prototype = {
 
     dispose: function () {
         this._labelsBuilder.dispose();
-    },
-
-    _updateSymbolSprite: function (seriesModel, itemStyle, symbolInfo, dpr) {
-        symbolInfo.maxSize = Math.min(symbolInfo.maxSize * 2, 200);
-
-        var symbolSize = [];
-        if (symbolInfo.aspect > 1) {
-            symbolSize[0] = symbolInfo.maxSize;
-            symbolSize[1] = symbolInfo.maxSize / symbolInfo.aspect;
-        }
-        else {
-            symbolSize[1] = symbolInfo.maxSize;
-            symbolSize[0] = symbolInfo.maxSize * symbolInfo.aspect;
-        }
-
-        // In case invalid data.
-        symbolSize[0] = symbolSize[0] || 1;
-        symbolSize[1] = symbolSize[1] || 1;
-
-        if (this._symbolType !== symbolInfo.type
-            || !isSymbolSizeSame(this._symbolSize, symbolSize)
-            || this._lineWidth !== itemStyle.lineWidth
-        ) {
-            spriteUtil.createSymbolSprite(symbolInfo.type, symbolSize, {
-                fill: '#fff',
-                lineWidth: itemStyle.lineWidth,
-                shadowColor: 'transparent',
-                minMargin: 0
-            }, this._spriteImageCanvas);
-
-            spriteUtil.createSDFFromCanvas(
-                this._spriteImageCanvas, Math.min(this._spriteImageCanvas.width, 32), SDF_RANGE,
-                this._mesh.material.get('sprite').image
-            );
-
-            this._symbolType = symbolInfo.type;
-            this._symbolSize = symbolSize;
-            this._lineWidth = itemStyle.lineWidth;
-        }
-        return this._spriteImageCanvas.width / symbolInfo.maxSize * dpr;
-
     },
 
     _updateMaterial: function (seriesModel, itemStyle) {
