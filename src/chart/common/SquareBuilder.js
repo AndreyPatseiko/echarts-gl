@@ -36,22 +36,45 @@ SquareBuilder.prototype = {
             end = data.count();
         }
 
-        this._mesh = new PointsMesh();        
+        this._mesh = new PointsMesh();
         var attributes = this._mesh.geometry.attributes;
+
+        /* Getting width and height one cell */
+        var coordSys = seriesModel.coordinateSystem;
+        var xAxis = coordSys.getAxis('x');
+        var yAxis = coordSys.getAxis('y');
+        var cellSize = { w: xAxis.getBandWidth(), h: yAxis.getBandWidth() };
+        const half = { w: cellSize.w / 2, h: cellSize.h / 2 }
+        var points = data.getLayout('points');
+
+        const px0 = points[0] - half.w;
+        const py0 = points[1] - half.h;
+
+        const px1 = px0;
+        const py1 = py0 + cellSize.h;
+
+        const px2 = px0 + cellSize.w;
+        const py2 = py1;
+
+        const px3 = px2;
+        const py3 = py0;
+
+        // console.log(cellSize, points);
 
         // add mesh to rootNode
         this.rootNode.add(this._mesh);
 
         // init
-        attributes.position.init(3);
+        attributes.position.init(4);
 
-        var points = new Float32Array([100, 100, 300, 300, 100, 300]);
+        var points = new Float32Array([px0, py0, px1, py1, px2, py2, px3, py3]);
         console.log(points);
         var positionArr = attributes.position.value;
 
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 4; i++) {
             var i3 = i * 3;
             var i2 = i * 2;
+
             positionArr[i3] = points[i2];
             positionArr[i3 + 1] = points[i2 + 1];
             positionArr[i3 + 2] = Z_2D;
