@@ -16,5 +16,9 @@ export default echarts.SeriesModel.extend({
     defaultOption: {
         coordinateSystem: 'cartesian2d',
         zlevel: 10,
-    }
+        itemStyle: {
+            opacity: 1
+        },
+    },
+
 });

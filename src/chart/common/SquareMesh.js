@@ -19,7 +19,7 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
     return {
         geometry: geometry,
         material: material,
-        mode: graphicGL.Mesh.TRIANGLE_FAN,
+        mode: graphicGL.Mesh.TRIANGLES,
 
         sizeScale: 1
     };

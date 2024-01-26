@@ -28,12 +28,14 @@ SquareBuilder.prototype = {
 
     update: function (seriesModel, ecModel, api, start, end) {
         var data = seriesModel.getData();
+        var dataCount = data.count();
+
 
         if (start == null) {
             start = 0;
         }
         if (end == null) {
-            end = data.count();
+            end = dataCount;
         }
 
         this._mesh = new PointsMesh();
@@ -47,38 +49,77 @@ SquareBuilder.prototype = {
         const half = { w: cellSize.w / 2, h: cellSize.h / 2 }
         var points = data.getLayout('points');
 
-        const px0 = points[0] - half.w;
-        const py0 = points[1] - half.h;
-
-        const px1 = px0;
-        const py1 = py0 + cellSize.h;
-
-        const px2 = px0 + cellSize.w;
-        const py2 = py1;
-
-        const px3 = px2;
-        const py3 = py0;
-
-        // console.log(cellSize, points);
-
         // add mesh to rootNode
         this.rootNode.add(this._mesh);
 
-        // init
-        attributes.position.init(4);
 
-        var points = new Float32Array([px0, py0, px1, py1, px2, py2, px3, py3]);
-        console.log(points);
+        // init
+        attributes.position.init(dataCount * 6);
+        attributes.color.init(dataCount * 6);
+
         var positionArr = attributes.position.value;
 
-        for (var i = 0; i < 4; i++) {
-            var i3 = i * 3;
+        var rgbaArr = [];
+
+
+        for (var i = 0; i < dataCount; i++) {
+            var i3 = i * 18;
             var i2 = i * 2;
 
-            positionArr[i3] = points[i2];
-            positionArr[i3 + 1] = points[i2 + 1];
+            var centerX = points[i2];
+            var centerY = points[i2 + 1];
+
+            var px0 = centerX - half.w + 1;
+            var py0 = centerY - half.h;
+
+            var px1 = px0;
+            var py1 = py0 + cellSize.h;
+
+            var px2 = px0 + cellSize.w;
+            var py2 = py1;
+
+            var px3 = px2;
+            var py3 = py0;
+
+            // Triangle 1
+            positionArr[i3] = px0;
+            positionArr[i3 + 1] = py0;
             positionArr[i3 + 2] = Z_2D;
+
+            positionArr[i3 + 3] = px1;
+            positionArr[i3 + 4] = py1;
+            positionArr[i3 + 5] = Z_2D;
+
+            positionArr[i3 + 6] = px2;
+            positionArr[i3 + 7] = py2;
+            positionArr[i3 + 8] = Z_2D;
+
+            // Triangle 2
+            positionArr[i3 + 9] = px0;
+            positionArr[i3 + 10] = py0;
+            positionArr[i3 + 11] = Z_2D;
+
+            positionArr[i3 + 12] = px2;
+            positionArr[i3 + 13] = py2;
+            positionArr[i3 + 14] = Z_2D;
+
+            positionArr[i3 + 15] = px3;
+            positionArr[i3 + 16] = py3;
+            positionArr[i3 + 17] = Z_2D;
+
+            var color = getItemVisualColor(data, i);
+            var opacity = getItemVisualOpacity(data, i);
+            graphicGL.parseColor(color, rgbaArr);
+            rgbaArr[3] *= opacity;
+            var col = i * 6;
+            attributes.color.set(col, rgbaArr);
+            attributes.color.set(col + 1, rgbaArr);
+            attributes.color.set(col + 2, rgbaArr);
+            attributes.color.set(col + 3, rgbaArr);
+            attributes.color.set(col + 4, rgbaArr);
+            attributes.color.set(col + 5, rgbaArr);
         }
+        console.log('positionArr', positionArr);
     },
 };
 
