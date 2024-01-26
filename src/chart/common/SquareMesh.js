@@ -1,5 +1,4 @@
 import graphicGL from '../../util/graphicGL';
-import verticesSortMixin from '../../util/geometry/verticesSortMixin';
 
 import sdfSpriteGLSL from './sdfSprite.glsl.js';
 graphicGL.Shader.import(sdfSpriteGLSL);
@@ -10,15 +9,11 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
         attributes: {
             color: new graphicGL.Geometry.Attribute('color', 'float', 4, 'COLOR'),
             position: new graphicGL.Geometry.Attribute('position', 'float', 3, 'POSITION'),
-            size: new graphicGL.Geometry.Attribute('size', 'float', 1),
         }
     });
-    Object.assign(geometry, verticesSortMixin);
 
     var material = new graphicGL.Material({
         shader: graphicGL.createShader('ecgl.sdfSprite'),
-        transparent: true,
-        depthMask: false
     });
 
     return {
