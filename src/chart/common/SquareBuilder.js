@@ -3,7 +3,6 @@ import graphicGL from '../../util/graphicGL';
 import spriteUtil from '../../util/sprite';
 import PointsMesh from './SquareMesh';
 import LabelsBuilder from '../../component/common/LabelsBuilder';
-import Matrix4 from 'claygl/src/math/Matrix4';
 import retrieve from '../../util/retrieve';
 import { getItemVisualColor, getItemVisualOpacity } from '../../util/visual';
 
@@ -17,7 +16,6 @@ function isSymbolSizeSame(a, b) {
 // TODO gl_PointSize has max value.
 function SquareBuilder(is2D, api) {
     this.rootNode = new graphicGL.Node();
-    this.is2D = true;
     this._startDataIndex = 0;
     this._endDataIndex = 0;
 }
@@ -39,7 +37,11 @@ SquareBuilder.prototype = {
         }
 
         this._mesh = new PointsMesh();
+        var material = this._mesh.material;
         var attributes = this._mesh.geometry.attributes;
+
+        // activate color attribute
+        material.define('VERTEX_COLOR');
 
         /* Getting width and height one cell */
         var coordSys = seriesModel.coordinateSystem;
@@ -60,7 +62,6 @@ SquareBuilder.prototype = {
         var positionArr = attributes.position.value;
 
         var rgbaArr = [];
-
 
         for (var i = 0; i < dataCount; i++) {
             var i3 = i * 18;
