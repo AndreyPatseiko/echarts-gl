@@ -22,7 +22,12 @@
       var chart = echarts.init(document.getElementById("main"));
 
       chart.setOption({
-        tooltip: {},
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+          },
+        },
         backgroundColor: "#fff",
         xAxis: { type: "category" },
         yAxis: { type: "category" },

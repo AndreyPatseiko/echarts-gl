@@ -34,7 +34,7 @@ export default echarts.ChartView.extend({
             return;
         }
        
-        var pointsBuilder = new SquareBuilder(true, api);
+        var pointsBuilder = new SquareBuilder(api);
         // changes - end
         this._pointsBuilderList.length = 1;
 
