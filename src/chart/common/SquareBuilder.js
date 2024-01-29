@@ -38,9 +38,14 @@ SquareBuilder.prototype = {
     highlightOnMouseover: true,
 
     update: function (seriesModel, ecModel, api, start, end) {
-        var data = seriesModel.getData();
-        var dataCount = data.count();
+        // Swap barMesh
+        var tmp = this._prevMesh;
+        this._prevMesh = this._mesh;
+        this._mesh = tmp;
 
+        var data = seriesModel.getData();
+
+        var dataCount = data.count();
 
         if (start == null) {
             start = 0;
@@ -49,9 +54,29 @@ SquareBuilder.prototype = {
             end = dataCount;
         }
 
-        this._mesh = new PointsMesh();
+        this._startDataIndex = start;
+        this._endDataIndex = end - 1;
+
+        if (!this._mesh) {
+            var material = this._prevMesh && this._prevMesh.material;
+            this._mesh = new PointsMesh({
+                // Render after axes
+                renderOrder: 10,
+                // FIXME
+                frustumCulling: false
+            });
+            if (material) {
+                this._mesh.material = material;
+            }
+        }
+
+        // this._mesh = new PointsMesh();
         var material = this._mesh.material;
         var attributes = this._mesh.geometry.attributes;
+
+        // add mesh to rootNode
+        this.rootNode.remove(this._prevMesh);
+        this.rootNode.add(this._mesh);
 
         // activate color attribute
         material.define('VERTEX_COLOR');
@@ -63,9 +88,6 @@ SquareBuilder.prototype = {
         var cellSize = { w: xAxis.getBandWidth(), h: yAxis.getBandWidth() };
         const half = { w: cellSize.w / 2, h: cellSize.h / 2 }
         var points = data.getLayout('points');
-
-        // add mesh to rootNode
-        this.rootNode.add(this._mesh);
 
 
         // init
@@ -122,7 +144,7 @@ SquareBuilder.prototype = {
             positionArr[i3 + 17] = Z_2D;
 
             var color = getItemVisualColor(data, i);
-            var opacity = getItemVisualOpacity(data, i);
+            var opacity = color && getItemVisualOpacity(data, i) || 0;
             graphicGL.parseColor(color, rgbaArr);
             rgbaArr[3] *= opacity;
             var col = i * 6;
@@ -136,11 +158,16 @@ SquareBuilder.prototype = {
         // console.log('positionArr', positionArr);
         this._updateLabelBuilder(seriesModel, start, end);
 
-        this._updateHandler(seriesModel, ecModel, api);
+        // this._updateHandler(seriesModel, ecModel, api);
+
+        this._updateAnimation(seriesModel);
 
         this._api = api;
     },
 
+    getPointsMesh: function () {
+        return this._mesh;
+    },
     _updateLabelBuilder: function (seriesModel, start, end) {
         var data = seriesModel.getData();
         var geometry = this._mesh.geometry;
@@ -162,51 +189,16 @@ SquareBuilder.prototype = {
 
     },
 
-    _updateHandler: function (seriesModel, ecModel, api) {        
-        var data = seriesModel.getData();
-        var pointsMesh = this._mesh;
-        var self = this;
-
-        var lastDataIndex = -1;
-        var isCartesian3D = seriesModel.coordinateSystem
-            && seriesModel.coordinateSystem.type === 'cartesian3D';
-
-        var grid3DModel;
-        if (isCartesian3D) {
-            grid3DModel = seriesModel.coordinateSystem.model;
-        }
-
-        pointsMesh.seriesIndex = seriesModel.seriesIndex;
-
-        pointsMesh.off('mousemove');
-        pointsMesh.off('mouseout');
-
-        pointsMesh.on('mousemove', function (e) {
-            console.log('mousemove');
-            var dataIndex = e.vertexIndex + self._startDataIndex;
-            if (dataIndex !== lastDataIndex) {
-                if (this.highlightOnMouseover) {
-                    this.downplay(data, lastDataIndex);
-                    this.highlight(data, dataIndex);
-                    this._labelsBuilder.updateLabels([dataIndex]);
-                }
-            }
-
-            pointsMesh.dataIndex = dataIndex;
-            lastDataIndex = dataIndex;
-        }, this);
-
-        pointsMesh.on('mouseout', function (e) {
-            var dataIndex = e.vertexIndex + self._startDataIndex;
-            if (this.highlightOnMouseover) {
-                this.downplay(data, dataIndex);
-                this._labelsBuilder.updateLabels();
-            }
-            lastDataIndex = -1;
-            pointsMesh.dataIndex = -1;
-
-        }, this);
+    _updateAnimation: function (seriesModel) {
+        graphicGL.updateVertexAnimation(
+            [['prevPosition', 'position'],
+            ['prevSize', 'size']],
+            this._prevMesh,
+            this._mesh,
+            seriesModel
+        );
     },
+
 };
 
 export default SquareBuilder;

@@ -23,10 +23,7 @@
 
       chart.setOption({
         tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-          },
+          trigger: "item",
         },
         backgroundColor: "#fff",
         xAxis: { type: "category" },
@@ -46,6 +43,7 @@
               [3, 2, 2.6],
               [4, 0, null],
               [4, 1, undefined],
+              [4, 2, "-"],
               [5, 0, 2],
               [5, 1, 1],
             ],
@@ -76,6 +74,7 @@
           min: 0,
           max: 10,
           calculable: true,
+          realtime: true,
           orient: "vertical",
           right: "2%",
           top: "5%",

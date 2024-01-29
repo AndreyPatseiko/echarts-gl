@@ -9,12 +9,16 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
         attributes: {
             color: new graphicGL.Geometry.Attribute('color', 'float', 4, 'COLOR'),
             position: new graphicGL.Geometry.Attribute('position', 'float', 3, 'POSITION'),
+            prevPosition: new graphicGL.Geometry.Attribute('prevPosition', 'float', 3),
+            prevSize: new graphicGL.Geometry.Attribute('prevSize', 'float', 1)
         }
     });
 
     var material = new graphicGL.Material({
         shader: graphicGL.createShader('ecgl.sdfSprite'),
     });
+
+    material.define('both', 'VERTEX_COLOR');
 
     return {
         geometry: geometry,
