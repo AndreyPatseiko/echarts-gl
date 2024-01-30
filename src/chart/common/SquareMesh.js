@@ -61,7 +61,7 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
 
             if (cx > pointX && cx < pointX + cellWidth && cy > pointY && cy < pointY + cellHeight) {
                 var color = this.geometry.attributes.color.get(idx, new graphicGL.Vector4());
-                if (color[0] === 0 && color[1] === 0 && color[1] === 0) {
+                if (color[0] === 0 && color[1] === 0 && color[2] === 0) {
                     return
                 }
 
