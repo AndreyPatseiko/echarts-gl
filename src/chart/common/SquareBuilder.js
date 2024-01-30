@@ -158,7 +158,7 @@ SquareBuilder.prototype = {
         // console.log('positionArr', positionArr);
         this._updateLabelBuilder(seriesModel, start, end);
 
-        // this._updateHandler(seriesModel, ecModel, api);
+        this._updateHandler(seriesModel, ecModel, api);
 
         this._updateAnimation(seriesModel);
 
@@ -168,6 +168,7 @@ SquareBuilder.prototype = {
     getPointsMesh: function () {
         return this._mesh;
     },
+
     _updateLabelBuilder: function (seriesModel, start, end) {
         var data = seriesModel.getData();
         var geometry = this._mesh.geometry;
@@ -197,6 +198,96 @@ SquareBuilder.prototype = {
             this._mesh,
             seriesModel
         );
+    },
+
+    _updateHandler: function (seriesModel, ecModel, api) {
+        var data = seriesModel.getData();
+        var pointsMesh = this._mesh;
+        var self = this;
+
+        var lastDataIndex = -1;
+        pointsMesh.seriesIndex = seriesModel.seriesIndex;
+
+        pointsMesh.off('mousemove');
+        pointsMesh.off('mouseout');
+
+        pointsMesh.on('mousemove', function (e) {
+            var dataIndex = e.vertexIndex + self._startDataIndex;
+
+            if (dataIndex !== lastDataIndex) {
+                if (this.highlightOnMouseover) {
+                    this.downplay(data, lastDataIndex);
+                    this.highlight(data, dataIndex);
+                    this._labelsBuilder.updateLabels([dataIndex]);
+                }
+            }
+
+            pointsMesh.dataIndex = dataIndex;
+            lastDataIndex = dataIndex;
+        }, this);
+
+        pointsMesh.on('mouseout', function (e) {
+            var dataIndex = e.vertexIndex + self._startDataIndex;
+            if (this.highlightOnMouseover) {
+                this.downplay(data, dataIndex);
+                this._labelsBuilder.updateLabels();
+            }
+            lastDataIndex = -1;
+            pointsMesh.dataIndex = -1;
+        }, this);
+    },
+
+    highlight: function (data, dataIndex) {
+        if (dataIndex > this._endDataIndex || dataIndex < this._startDataIndex) {
+            return;
+        }
+        var itemModel = data.getItemModel(dataIndex);
+        var emphasisItemStyleModel = itemModel.getModel('emphasis.itemStyle');
+        var emphasisColor = emphasisItemStyleModel.get('color');
+        var emphasisOpacity = emphasisItemStyleModel.get('opacity');
+        if (emphasisColor == null) {
+            var color = getItemVisualColor(data, dataIndex);
+            emphasisColor = echarts.color.lift(color, -0.1);
+        }
+        if (emphasisOpacity == null) {
+            emphasisOpacity = getItemVisualOpacity(data, dataIndex);
+        }
+        var colorArr = graphicGL.parseColor(emphasisColor);
+        colorArr[3] *= emphasisOpacity;
+
+        const coefficient = dataIndex * 6;
+
+        this._mesh.geometry.attributes.color.set(coefficient - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 1 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 2 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 3 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 4 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 5 - this._startDataIndex, colorArr);
+        this._mesh.geometry.dirtyAttribute('color');
+
+        this._api.getZr().refresh();
+    },
+    downplay: function (data, dataIndex) {
+        if (dataIndex > this._endDataIndex || dataIndex < this._startDataIndex) {
+            return;
+        }
+        var color = getItemVisualColor(data, dataIndex);
+        var opacity = getItemVisualOpacity(data, dataIndex);
+
+        var colorArr = graphicGL.parseColor(color);
+        colorArr[3] *= opacity;
+
+        const coefficient = dataIndex * 6;
+
+        this._mesh.geometry.attributes.color.set(coefficient - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 1 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 2 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 3 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 4 - this._startDataIndex, colorArr);
+        this._mesh.geometry.attributes.color.set(coefficient + 5 - this._startDataIndex, colorArr);
+        this._mesh.geometry.dirtyAttribute('color');
+
+        this._api.getZr().refresh();
     },
 
 };

@@ -22,7 +22,6 @@ export default echarts.ChartView.extend({
 
         this.viewGL.add(this.groupGL);
 
-        this._pointsBuilderList = [];
         this._glViewHelper = new GLViewHelper(this.viewGL);
     },
 
@@ -33,10 +32,8 @@ export default echarts.ChartView.extend({
         if (!seriesModel.getData().count()) {
             return;
         }
-       
+
         var pointsBuilder = new SquareBuilder(api);
-        // changes - end
-        this._pointsBuilderList.length = 1;
 
         this.groupGL.add(pointsBuilder.rootNode);
 
