@@ -155,7 +155,6 @@ SquareBuilder.prototype = {
             attributes.color.set(col + 4, rgbaArr);
             attributes.color.set(col + 5, rgbaArr);
         }
-        // console.log('positionArr', positionArr);
         this._updateLabelBuilder(seriesModel, start, end);
 
         this._updateHandler(seriesModel, ecModel, api);
@@ -247,7 +246,7 @@ SquareBuilder.prototype = {
         var emphasisOpacity = emphasisItemStyleModel.get('opacity');
         if (emphasisColor == null) {
             var color = getItemVisualColor(data, dataIndex);
-            emphasisColor = echarts.color.lift(color, -0.1);
+            emphasisColor = echarts.color.lift(color, -0.4);
         }
         if (emphasisOpacity == null) {
             emphasisOpacity = getItemVisualOpacity(data, dataIndex);

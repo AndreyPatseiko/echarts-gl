@@ -38,12 +38,6 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
         var cx = x * halfWidth + halfWidth;
         var cy = ((-1 * y * halfHeight) + halfHeight);
 
-        // getting position two diagonal points for calculation cell width/height 
-        var cellP1 = this.geometry.attributes.position.get(0, new graphicGL.Vector3());
-        var cellP2 = this.geometry.attributes.position.get(2, new graphicGL.Vector3());
-        var cellWidth = cellP2[0] - cellP1[0];
-        var cellHeight = cellP2[1] - cellP1[1];
-
         // From near to far. indices have been sorted.
         for (var i = 0; i < this.geometry.vertexCount; i += 6) {
             var idx;
@@ -58,6 +52,12 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
             var pointPosition = this.geometry.attributes.position.get(idx, point.array);
             var pointX = pointPosition[0];
             var pointY = pointPosition[1];
+
+            // getting position two diagonal points for calculation cell width/height 
+            var cellP1 = this.geometry.attributes.position.get(idx, new graphicGL.Vector3());
+            var cellP2 = this.geometry.attributes.position.get(idx + 2, new graphicGL.Vector3());
+            var cellWidth = cellP2[0] - cellP1[0];
+            var cellHeight = cellP2[1] - cellP1[1];
 
             if (cx > pointX && cx < pointX + cellWidth && cy > pointY && cy < pointY + cellHeight) {
                 var color = this.geometry.attributes.color.get(idx, new graphicGL.Vector4());

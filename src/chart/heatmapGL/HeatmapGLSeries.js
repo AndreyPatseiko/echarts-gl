@@ -7,7 +7,7 @@ export default echarts.SeriesModel.extend({
 
     type: 'series.heatmapGL',
 
-    dependencies: ['grid', 'polar', 'geo', 'singleAxis'],
+    dependencies: ['grid'],
 
     getInitialData: function () {
         return echarts.helper.createList(this);

@@ -24,20 +24,7 @@ export function install(registers) {
                     return data.mapDimension(dim);
                 }).slice(0, 2);
                 var pt = [];
-                if (dims.length === 1) {
-                    progress = function (params) {
-                        var points = new Float32Array((params.end - params.start) * 2);
-                        for (var idx = params.start; idx < params.end; idx++) {
-                            var offset = (idx - params.start) * 2;
-                            var x = data.get(dims[0], idx);
-                            var pt = coordSys.dataToPoint(x);
-                            points[offset] = pt[0];
-                            points[offset + 1] = pt[1];
-                        }
-                        data.setLayout('points', points);
-                    };
-                }
-                else if (dims.length === 2) {
+                if (dims.length === 2) {
                     progress = function (params) {
                         var points = new Float32Array((params.end - params.start) * 2);
                         for (var idx = params.start; idx < params.end; idx++) {
