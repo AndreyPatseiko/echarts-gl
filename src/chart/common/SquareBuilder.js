@@ -1,12 +1,8 @@
 import * as echarts from 'echarts/lib/echarts';
 import graphicGL from '../../util/graphicGL';
-import spriteUtil from '../../util/sprite';
 import PointsMesh from './SquareMesh';
 import LabelsBuilder from '../../component/common/LabelsBuilder';
-import retrieve from '../../util/retrieve';
 import { getItemVisualColor, getItemVisualOpacity } from '../../util/visual';
-
-var SDF_RANGE = 20;
 
 var Z_2D = -10;
 

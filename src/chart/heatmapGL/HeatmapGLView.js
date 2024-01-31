@@ -39,4 +39,15 @@ export default echarts.ChartView.extend({
 
         pointsBuilder.update(seriesModel, ecModel, api);
     },
+
+    dispose: function () {
+        this.groupGL.removeAll();
+        this._pointsBuilderList.forEach(function (pointsBuilder) {
+            pointsBuilder.dispose();
+        });
+    },
+
+    remove: function () {
+        this.groupGL.removeAll();
+    }
 });
