@@ -9,6 +9,8 @@ ECharts-GL is an extension pack of [Apache ECharts](http://echarts.apache.org/),
 
 + [Gallery](https://www.makeapie.com/explore.html#tags=echarts-gl)
 
++ [Changes in this fork](#changes-in-this-fork)
+
 ## Installing
 
 ###  npm and webpack
@@ -67,3 +69,10 @@ chart.setOption({
 ## License
 
 ECharts-GL is available under the BSD license.
+
+## Changes in this fork
+New chart type - `heatmapGL` - was developed. \
+This chart was based on the scatterGL. And it has some limitation on styling in `itemStyle` (you can't use borders, or emphasis options).
+You can find example in <b>./test/hetamapGL-simple.html</b>
+
+PS. It's not ideal code, and may be improvement.
