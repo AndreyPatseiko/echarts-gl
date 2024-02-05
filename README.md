@@ -75,4 +75,9 @@ New chart type - `heatmapGL` - was developed. \
 This chart was based on the scatterGL. And it has some limitation on styling in `itemStyle` (you can't use borders, or emphasis options).
 You can find example in <b>./test/hetamapGL-simple.html</b>
 
+#### Installing
+```bash
+npm i github:AndreyPatseiko/echarts-gl#heat-map-optimization
+```
+
 PS. It's not ideal code, and may be improvement.
