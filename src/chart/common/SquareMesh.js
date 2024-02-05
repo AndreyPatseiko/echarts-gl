@@ -39,7 +39,7 @@ var SquareMesh = graphicGL.Mesh.extend(function () {
         var cy = ((-1 * y * halfHeight) + halfHeight);
 
         // From near to far. indices have been sorted.
-        for (var i = 0; i < this.geometry.vertexCount; i += 6) {
+        for (var i = this.geometry.vertexCount; i >=0 ; i -= 6) {
             var idx;
             if (!this.geometry.indices) {
                 idx = i;
