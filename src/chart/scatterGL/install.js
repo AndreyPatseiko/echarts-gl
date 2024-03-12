@@ -14,6 +14,10 @@ export function install(registers) {
             var coordSys = seriesModel.coordinateSystem;
             var data = seriesModel.getData();
 
+            const boundaryRect = coordSys.master._rect;
+            var topLeft = { x: boundaryRect.x, y: boundaryRect.y };
+            var bottomRight = { x: boundaryRect.x + boundaryRect.width, y: boundaryRect.y + boundaryRect.height };
+
             var progress;
             if (coordSys) {
                 var dims = coordSys.dimensions.map(function (dim) {
@@ -44,8 +48,8 @@ export function install(registers) {
                             pt[1] = y;
 
                             pt = coordSys.dataToPoint(pt);
-                            points[offset] = pt[0];
-                            points[offset + 1] = pt[1];
+                            points[offset] = pt[0] > topLeft.x && pt[0] < bottomRight.x ? pt[0] : undefined;
+                            points[offset + 1] = pt[1] > topLeft.y && pt[1] < bottomRight.y ? pt[1] : undefined;
                         }
                         data.setLayout('points', points);
                     };
