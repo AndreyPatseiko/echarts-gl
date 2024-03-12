@@ -48,8 +48,8 @@ export function install(registers) {
                             pt[1] = y;
 
                             pt = coordSys.dataToPoint(pt);
-                            points[offset] = pt[0] > topLeft.x && pt[0] < bottomRight.x ? pt[0] : undefined;
-                            points[offset + 1] = pt[1] > topLeft.y && pt[1] < bottomRight.y ? pt[1] : undefined;
+                            points[offset] = pt[0] >= topLeft.x && pt[0] <= bottomRight.x ? pt[0] : undefined;
+                            points[offset + 1] = pt[1] >= topLeft.y && pt[1] <= bottomRight.y ? pt[1] : undefined;
                         }
                         data.setLayout('points', points);
                     };
