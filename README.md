@@ -71,11 +71,16 @@ chart.setOption({
 ECharts-GL is available under the BSD license.
 
 ## Changes in this fork
-New chart type - `heatmapGL` - was developed. \
-This chart was based on the scatterGL. And it has some limitation on styling in `itemStyle` (you can't use borders, or emphasis options).
-You can find example in <b>./test/hetamapGL-simple.html</b>
+
+1. New chart type - `heatmapGL` - was developed. \
+   This chart was based on the scatterGL. And it has some limitation on styling in `itemStyle` (you can't use borders, or emphasis options).
+   You can find example in <b>./test/hetamapGL-simple.html</b>
+
+2. `ScatterGL`
+   - items outside the grid boundary have been excluded from the rendering process
 
 #### Installing
+
 ```bash
 npm i github:AndreyPatseiko/echarts-gl#heat-map-optimization
 ```
