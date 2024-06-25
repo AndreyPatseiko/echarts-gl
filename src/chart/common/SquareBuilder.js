@@ -6,9 +6,6 @@ import { getItemVisualColor, getItemVisualOpacity } from '../../util/visual';
 
 var Z_2D = -10;
 
-function isSymbolSizeSame(a, b) {
-    return a && b && a[0] === b[0] && a[1] === b[1];
-}
 // TODO gl_PointSize has max value.
 function SquareBuilder(api) {
     this.rootNode = new graphicGL.Node();
@@ -162,6 +159,10 @@ SquareBuilder.prototype = {
 
     getPointsMesh: function () {
         return this._mesh;
+    },
+
+    dispose: function () {
+        this._labelsBuilder.dispose();
     },
 
     _updateLabelBuilder: function (seriesModel, start, end) {
