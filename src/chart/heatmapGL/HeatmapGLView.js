@@ -33,18 +33,16 @@ export default echarts.ChartView.extend({
             return;
         }
 
-        var pointsBuilder = new SquareBuilder(api);
+        this._pointsBuilder = new SquareBuilder(api);
 
-        this.groupGL.add(pointsBuilder.rootNode);
+        this.groupGL.add(this._pointsBuilder.rootNode);
 
-        pointsBuilder.update(seriesModel, ecModel, api);
+        this._pointsBuilder.update(seriesModel, ecModel, api);
     },
 
     dispose: function () {
-        this.groupGL.removeAll();
-        this._pointsBuilderList.forEach(function (pointsBuilder) {
-            pointsBuilder.dispose();
-        });
+        this.groupGL.removeAll();        
+        this._pointsBuilder.dispose();        
     },
 
     remove: function () {
