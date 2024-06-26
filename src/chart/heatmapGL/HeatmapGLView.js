@@ -41,8 +41,10 @@ export default echarts.ChartView.extend({
     },
 
     dispose: function () {
-        this.groupGL.removeAll();        
-        this._pointsBuilder.dispose();        
+        this.groupGL.removeAll();
+        if (this._pointsBuilder && this._pointsBuilder.dispose) {
+            this._pointsBuilder.dispose();
+        }
     },
 
     remove: function () {
