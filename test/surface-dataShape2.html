@@ -18,24 +18,30 @@
             var data = [{"x_variable":3,"y_variable":2,"z_variable":0.11820376636125732},{"x_variable":3,"y_variable":2.2,"z_variable":0.11838565255805805},{"x_variable":3,"y_variable":2.4000000000000004,"z_variable":0.11849087154367917},{"x_variable":3,"y_variable":2.6000000000000005,"z_variable":0.11856097826096688},{"x_variable":3,"y_variable":2.8000000000000007,"z_variable":0.11861062848581362},{"x_variable":3,"y_variable":3.000000000000001,"z_variable":0.11863864806404903},{"x_variable":3.4,"y_variable":2,"z_variable":0.13377022622069884},{"x_variable":3.4,"y_variable":2.2,"z_variable":0.13397853325385709},{"x_variable":3.4,"y_variable":2.4000000000000004,"z_variable":0.13411038558980926},{"x_variable":3.4,"y_variable":2.6000000000000005,"z_variable":0.13418064159074816},{"x_variable":3.4,"y_variable":2.8000000000000007,"z_variable":0.1342238601228674},{"x_variable":3.4,"y_variable":3.000000000000001,"z_variable":0.13425779324265025},{"x_variable":3.8,"y_variable":2,"z_variable":0.14926887220012097},{"x_variable":3.8,"y_variable":2.2,"z_variable":0.14950972399165724},{"x_variable":3.8,"y_variable":2.4000000000000004,"z_variable":0.14964649746639389},{"x_variable":3.8,"y_variable":2.6000000000000005,"z_variable":0.14973742666916345},{"x_variable":3.8,"y_variable":2.8000000000000007,"z_variable":0.14979642579056768},{"x_variable":3.8,"y_variable":3.000000000000001,"z_variable":0.14982737479501065},{"x_variable":4.2,"y_variable":2,"z_variable":0.16468827776834613},{"x_variable":4.2,"y_variable":2.2,"z_variable":0.16495908998206169},{"x_variable":4.2,"y_variable":2.4000000000000004,"z_variable":0.1651285026210502},{"x_variable":4.2,"y_variable":2.6000000000000005,"z_variable":0.1652300797226232},{"x_variable":4.2,"y_variable":2.8000000000000007,"z_variable":0.16529287316961533},{"x_variable":4.2,"y_variable":3.000000000000001,"z_variable":0.16533212505061454},{"x_variable":4.6000000000000005,"y_variable":2,"z_variable":0.18000802139974567},{"x_variable":4.6000000000000005,"y_variable":2.2,"z_variable":0.18031868758822447},{"x_variable":4.6000000000000005,"y_variable":2.4000000000000004,"z_variable":0.18051245398818438},{"x_variable":4.6000000000000005,"y_variable":2.6000000000000005,"z_variable":0.18062747043505945},{"x_variable":4.6000000000000005,"y_variable":2.8000000000000007,"z_variable":0.18070728844739262},{"x_variable":4.6000000000000005,"y_variable":3.000000000000001,"z_variable":0.18075122463922141},{"x_variable":5.000000000000001,"y_variable":2,"z_variable":0.19524493430393514},{"x_variable":5.000000000000001,"y_variable":2.2,"z_variable":0.1955868671669967},{"x_variable":5.000000000000001,"y_variable":2.4000000000000004,"z_variable":0.19583236633177153},{"x_variable":5.000000000000001,"y_variable":2.6000000000000005,"z_variable":0.19594125476043558},{"x_variable":5.000000000000001,"y_variable":2.8000000000000007,"z_variable":0.19602239756102846},{"x_variable":5.000000000000001,"y_variable":3.000000000000001,"z_variable":0.19607731791873192}];
             var parsedData = data.map((d) => [d.x_variable, d.y_variable, d.z_variable])
 
+            function min(list, idx) {
+                return list.reduce((result, d) => Math.min(d[idx], result), Infinity)
+            }
+            function max(list, idx) {
+                return list.reduce((result, d) => Math.max(d[idx], result), -Infinity)
+            }
 
             chart.setOption(option = {
                 tooltip: {},
                 backgroundColor: '#fff',
                 xAxis3D: {
                     type: 'value',
-                    min: Math.min(parsedData.map((d) => d[0])),
-                    max: Math.max(parsedData.map((d) => d[0]))
+                    min: min(parsedData, 0),
+                    max: max(parsedData, 0),
                 },
                 yAxis3D: {
                     type: 'value',
-                    min: Math.min(parsedData.map((d) => d[1])),
-                    max: Math.max(parsedData.map((d) => d[1]))
+                    min: min(parsedData, 1),
+                    max: max(parsedData, 1),
                 },
                 zAxis3D: {
                     type: 'value',
-                    min: Math.min(parsedData.map((d) => d[2])),
-                    max: Math.max(parsedData.map((d) => d[2]))
+                    min: min(parsedData, 2),
+                    max: max(parsedData, 2),
                 },
                 grid3D: {
                 },
