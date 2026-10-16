@@ -27620,6 +27620,38 @@ EChartsGL.prototype.update = function (ecModel, api) {
             chartView.afterRender &&
                 chartView.afterRender(seriesModel, ecModel, api, layerGL);
 
+            if (seriesModel.subType === 'scatterGL' || seriesModel.subType === 'heatmapGL') {
+                var data = seriesModel.getData();
+                if (!data.getItemGraphicEl.__ecglTooltipProxy) {
+                    data.wrapMethod('getItemGraphicEl', function (element, dataIndex) {
+                        if (element || !Number.isInteger(dataIndex) || dataIndex < 0 || dataIndex >= this.count()) {
+                            return element;
+                        }
+                        var model = this.hostModel;
+                        var coordinateSystem = model.coordinateSystem;
+                        if (!coordinateSystem || !coordinateSystem.dataToPoint) {
+                            return;
+                        }
+                        var dimensions = coordinateSystem.dimensions.map(function (dimension) {
+                            return this.mapDimension(dimension);
+                        }, this);
+                        var point = coordinateSystem.dataToPoint(this.getValues(dimensions, dataIndex));
+                        if (!point || !isFinite(point[0]) || !isFinite(point[1])) {
+                            return;
+                        }
+                        var proxy = new echarts.graphic.Rect({
+                            shape: { x: point[0], y: point[1], width: 0, height: 0 }
+                        });
+                        var ecData = echarts.helper.getECData(proxy);
+                        ecData.seriesIndex = model.seriesIndex;
+                        ecData.dataIndex = dataIndex;
+                        ecData.dataType = this.dataType;
+                        return proxy;
+                    });
+                    data.getItemGraphicEl.__ecglTooltipProxy = true;
+                }
+            }
+
             setSilent(chartView.groupGL, seriesModel.get('silent'));
         }
     });

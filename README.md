@@ -103,10 +103,12 @@ The fork has been updated to the echart v.6.0.0.
 3. `Fix for warning - 'Too many active WebGL contexts' has been added`. \
    Issue - [Too many active WebGL contexts warning](https://github.com/ecomfe/echarts-gl/issues/439) was added from [not merged PR](https://github.com/ecomfe/echarts-gl/pull/440)
 
+4. The behavior of tooltips when connecting charts has been fixed. It works the same as with regular charts.
+
 ## Installing
 
 ```bash
-npm i github:AndreyPatseiko/echarts-gl#v1.0.0
+npm i github:AndreyPatseiko/echarts-gl#v2.1.1
 ```
 
 ## Deploy
