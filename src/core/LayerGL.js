@@ -16,6 +16,7 @@ import Renderer from 'claygl/src/Renderer';
 import RayPicking from 'claygl/src/picking/RayPicking';
 import Texture from 'claygl/src/Texture';
 import graphicGL from '../util/graphicGL';
+import glenum from 'claygl/src/core/glenum';
 
 // PENDING, clay. notifier is same with zrender Eventful
 import notifier from 'claygl/src/core/mixin/notifier';
@@ -86,6 +87,25 @@ var LayerGL = function (id, zr) {
     this._picking = new RayPicking({
         renderer: this.renderer
     });
+
+    this._picking._intersectNode = function (node, out, forcePickAll) {
+    if (typeof node.isRenderable === 'function' && node.isRenderable()) {
+        if (
+            (!node.ignorePicking || forcePickAll)
+            && (
+                (node.mode === glenum.TRIANGLES && node.geometry.isUseIndices())
+                || node.geometry.pickByRay
+                || node.geometry.pick
+            )
+        ) {
+            this._intersectRenderable(node, out);
+        }
+    }
+
+    for (var childIndex = 0; childIndex < node._children.length; childIndex++) {
+            this._intersectNode(node._children[childIndex], out, forcePickAll);
+        }
+    };
 
     this._viewsToDispose = [];
 
