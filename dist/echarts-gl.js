@@ -27211,6 +27211,7 @@ LayerGL.prototype.onclick = LayerGL.prototype.dblclick = function (e) {
 
 LayerGL.prototype._clickToSetFocusPoint = function (e) {
     var renderer = this.renderer;
+    renderer.resize(this.zr.painter.getWidth(), this.zr.painter.getHeight());
     var oldViewport = renderer.viewport;
     for (var i = this.views.length - 1; i >= 0; i--) {
         var viewGL = this.views[i];
@@ -27223,6 +27224,7 @@ LayerGL.prototype._clickToSetFocusPoint = function (e) {
             var result = this._picking.pick(e.offsetX, e.offsetY, true);
             if (result) {
                 result.view = viewGL;
+                renderer.viewport = oldViewport;
                 return result;
             }
         }
@@ -27243,6 +27245,7 @@ LayerGL.prototype.pickObject = function (x, y) {
 
     var output = [];
     var renderer = this.renderer;
+    renderer.resize(this.zr.painter.getWidth(), this.zr.painter.getHeight());
     var oldViewport = renderer.viewport;
     for (var i = 0; i < this.views.length; i++) {
         var viewGL = this.views[i];

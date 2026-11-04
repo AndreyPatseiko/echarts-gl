@@ -113,8 +113,26 @@ npm i github:AndreyPatseiko/echarts-gl#v2.1.1
 
 ## Deploy
 
+Update version in the package.
+
 ```bash
 npm run release
 ```
 
+Make a tag with version.
+
 Then push all files in `dist` folder to the repo.
+
+## Develop
+
+```bash
+npm run i
+npm run dev
+```
+
+Open in the browser any html page from `test` folder. Fix urls.
+Works examples:
+
+- [heatmapGL](./test/hetamapGL-simple.html)
+- [heatmapGL 20 item](./test/hetamapGL-simple-20-items.html)
+- [scatterGL](./test/scatterGL-simple.html)
