@@ -27,6 +27,10 @@ export default echarts.ChartView.extend({
 
     render: function (seriesModel, ecModel, api) {
         this.groupGL.removeAll();
+        if (this._pointsBuilder) {
+            this._pointsBuilder.dispose();
+            this._pointsBuilder = null;
+        }
         this._glViewHelper.reset(seriesModel, api);
 
         if (!seriesModel.getData().count()) {
@@ -44,6 +48,7 @@ export default echarts.ChartView.extend({
         this.groupGL.removeAll();
         if (this._pointsBuilder && this._pointsBuilder.dispose) {
             this._pointsBuilder.dispose();
+            this._pointsBuilder = null;
         }
     },
 
