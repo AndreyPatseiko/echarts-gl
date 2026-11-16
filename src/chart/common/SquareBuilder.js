@@ -98,19 +98,43 @@ SquareBuilder.prototype = {
             var centerX = points[i2];
             var centerY = points[i2 + 1];
 
-            var left = centerX - half.w + 1;
-            var right = left + cellSize.w;
-            var top = centerY - half.h;
-            var bottom = top + cellSize.h;
+            var px0 = centerX - half.w + 1;
+            var py0 = centerY - half.h;
 
-            positionArr.set([
-                left, top, Z_2D,
-                left, bottom, Z_2D,
-                right, bottom, Z_2D,
-                left, top, Z_2D,
-                right, bottom, Z_2D,
-                right, top, Z_2D,
-            ], i3);
+            var px1 = px0;
+            var py1 = py0 + cellSize.h;
+
+            var px2 = px0 + cellSize.w;
+            var py2 = py1;
+
+            var px3 = px2;
+            var py3 = py0;
+
+            // Triangle 1
+            positionArr[i3] = px0;
+            positionArr[i3 + 1] = py0;
+            positionArr[i3 + 2] = Z_2D;
+
+            positionArr[i3 + 3] = px1;
+            positionArr[i3 + 4] = py1;
+            positionArr[i3 + 5] = Z_2D;
+
+            positionArr[i3 + 6] = px2;
+            positionArr[i3 + 7] = py2;
+            positionArr[i3 + 8] = Z_2D;
+
+            // Triangle 2
+            positionArr[i3 + 9] = px0;
+            positionArr[i3 + 10] = py0;
+            positionArr[i3 + 11] = Z_2D;
+
+            positionArr[i3 + 12] = px2;
+            positionArr[i3 + 13] = py2;
+            positionArr[i3 + 14] = Z_2D;
+
+            positionArr[i3 + 15] = px3;
+            positionArr[i3 + 16] = py3;
+            positionArr[i3 + 17] = Z_2D;
 
             var color = getItemVisualColor(data, i);
             var opacity = color && getItemVisualOpacity(data, i) || 0;
@@ -124,7 +148,6 @@ SquareBuilder.prototype = {
             attributes.color.set(col + 4, rgbaArr);
             attributes.color.set(col + 5, rgbaArr);
         }
-        this._mesh.geometry.dirty();
         this._updateLabelBuilder(seriesModel, start, end);
 
         this._updateHandler(seriesModel, ecModel, api);
@@ -165,7 +188,8 @@ SquareBuilder.prototype = {
 
     _updateAnimation: function (seriesModel) {
         graphicGL.updateVertexAnimation(
-            [['prevPosition', 'position']],
+            [['prevPosition', 'position'],
+            ['prevSize', 'size']],
             this._prevMesh,
             this._mesh,
             seriesModel
