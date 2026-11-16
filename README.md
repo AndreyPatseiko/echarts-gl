@@ -136,3 +136,30 @@ Works examples:
 - [heatmapGL](./test/hetamapGL-simple.html)
 - [heatmapGL 20 item](./test/hetamapGL-simple-20-items.html)
 - [scatterGL](./test/scatterGL-simple.html)
+
+Connecting to the real project:
+
+```bash
+npm run release
+npm link
+```
+
+in consumer:
+
+```bash
+npm link echarts-gl
+```
+
+Also you can use next commands to check is the linking process was successful.
+
+```bash
+# list of all yours dependencies
+npm ls
+
+# or
+# strict check single dependencies
+npm ls echarts-gl
+
+# unlinking library
+npm unlink echarts-gl
+```
