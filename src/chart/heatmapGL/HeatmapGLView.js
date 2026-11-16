@@ -27,17 +27,19 @@ export default echarts.ChartView.extend({
 
     render: function (seriesModel, ecModel, api) {
         this.groupGL.removeAll();
-        if (this._pointsBuilder) {
-            this._pointsBuilder.dispose();
-            this._pointsBuilder = null;
-        }
         this._glViewHelper.reset(seriesModel, api);
 
         if (!seriesModel.getData().count()) {
+            if (this._pointsBuilder) {
+                this._pointsBuilder.dispose();
+                this._pointsBuilder = null;
+            }
             return;
         }
 
-        this._pointsBuilder = new SquareBuilder(api);
+        if (!this._pointsBuilder) {
+            this._pointsBuilder = new SquareBuilder(api);
+        }
 
         this.groupGL.add(this._pointsBuilder.rootNode);
 
